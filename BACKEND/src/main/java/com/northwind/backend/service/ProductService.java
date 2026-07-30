@@ -78,7 +78,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
         // Deshabilitar en lugar de borrar físico para conservar integridad referencial
-        product.setDiscontinued(true);
+        product.setDiscontinued(1);
         productRepository.save(product);
     }
 

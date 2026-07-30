@@ -15,5 +15,5 @@ public class ProductResponse {
     private String supplierName;
     private BigDecimal unitPrice;
     private Integer unitsInStock;
-    private Boolean discontinued;
+    private Integer discontinued; // 0 = activo, 1 = descontinuado
 }

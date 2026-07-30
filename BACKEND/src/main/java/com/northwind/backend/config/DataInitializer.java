@@ -8,8 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * Inserta usuarios de prueba al iniciar la aplicación si no existen.
- * Esto garantiza que los hashes BCrypt sean generados correctamente en runtime.
+ * Crea usuarios de prueba al iniciar.
+ * Si ya existen, actualiza el password para garantizar que el hash BCrypt sea válido.
  */
 @Component
 @RequiredArgsConstructor
@@ -20,23 +20,27 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        createUserIfNotExists("admin",    "admin123", "Administrador del Sistema", "ADMIN", true);
-        createUserIfNotExists("usuario",  "user123",  "Usuario de Prueba",         "USER",  true);
-        createUserIfNotExists("inactivo", "test123",  "Usuario Inactivo Test",     "USER",  false);
+        upsertUser("admin",    "admin123", "Administrador del Sistema", "ADMIN", true);
+        upsertUser("usuario",  "user123",  "Usuario de Prueba",         "USER",  true);
+        upsertUser("inactivo", "test123",  "Usuario Inactivo Test",     "USER",  false);
     }
 
-    private void createUserIfNotExists(String username, String rawPassword,
-                                        String fullName, String role, boolean enabled) {
-        if (appUserRepository.findByUsername(username).isEmpty()) {
-            AppUser user = AppUser.builder()
-                    .username(username)
-                    .password(passwordEncoder.encode(rawPassword))
-                    .fullName(fullName)
-                    .role(role)
-                    .enabled(enabled)
-                    .build();
-            appUserRepository.save(user);
-            System.out.println("Usuario creado: " + username);
-        }
+    private void upsertUser(String username, String rawPassword,
+                            String fullName, String role, boolean enabled) {
+        AppUser user = appUserRepository.findByUsername(username).orElse(
+            AppUser.builder()
+                .username(username)
+                .fullName(fullName)
+                .role(role)
+                .enabled(enabled)
+                .build()
+        );
+        // Siempre regenera el hash para garantizar que sea válido
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setFullName(fullName);
+        user.setRole(role);
+        user.setEnabled(enabled);
+        appUserRepository.save(user);
+        System.out.println("Usuario listo: " + username);
     }
 }

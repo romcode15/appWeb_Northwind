@@ -24,5 +24,5 @@ public class ProductRequest {
     @Min(value = 0, message = "Las unidades no pueden ser negativas")
     private Integer unitsInStock;
 
-    private Boolean discontinued = false;
+    private Integer discontinued = 0; // 0 = activo, 1 = descontinuado
 }

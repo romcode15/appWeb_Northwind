@@ -28,6 +28,15 @@ public class OrderController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        try {
+            return ResponseEntity.ok(orderService.findAll());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         try {

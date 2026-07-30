@@ -32,5 +32,5 @@ public class Product {
     private Integer unitsInStock;
 
     @Column(name = "discontinued")
-    private Boolean discontinued;
+    private Integer discontinued;  // 0 = activo, 1 = descontinuado (Northwind usa integer)
 }
