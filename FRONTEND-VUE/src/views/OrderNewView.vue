@@ -124,12 +124,17 @@ const activeProducts = computed(() =>
 
 onMounted(async () => {
   cart.clear()
-  const [c, p] = await Promise.all([
-    api.get('/customers'),
-    api.get('/products')
-  ])
-  customers.value = c.data
-  products.value  = p.data
+  try {
+    const [c, p] = await Promise.all([
+      api.get('/customers'),
+      api.get('/products', { params: { page: 0, size: 9999 } })
+    ])
+    customers.value = c.data
+    // /products ahora devuelve un Page<ProductResponse>, los datos están en .content
+    products.value  = p.data.content ?? p.data
+  } catch (e) {
+    orderError.value = 'Error al cargar clientes o productos'
+  }
 })
 
 function addToCart() {

@@ -1,0 +1,29 @@
+# ==========================
+# Frontend Vue / Node
+# ==========================
+node_modules/
+FRONTEND-VUE/node_modules/
+
+dist/
+FRONTEND-VUE/dist/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================
+# Backend Spring Boot / Maven
+# ==========================
+BACKEND/target/
+
+# ==========================
+# Variables de entorno
+# ==========================
+.env
+.env.*
+
+# ==========================
+# Editores / IDE
+# ==========================
+.vscode/
+.idea/

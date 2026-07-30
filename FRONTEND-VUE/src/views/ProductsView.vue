@@ -52,25 +52,63 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Paginación -->
+        <div class="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
+          <span>
+            Página {{ currentPage + 1 }} de {{ totalPages }} &mdash; {{ totalElements }} productos
+          </span>
+          <div class="flex gap-2">
+            <button
+              @click="goToPage(currentPage - 1)"
+              :disabled="currentPage === 0"
+              class="px-3 py-1 rounded border enabled:hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed">
+              ← Anterior
+            </button>
+            <button
+              v-for="p in visiblePages"
+              :key="p"
+              @click="goToPage(p)"
+              :class="p === currentPage
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'hover:bg-gray-100'"
+              class="px-3 py-1 rounded border min-w-[2.2rem] text-center">
+              {{ p + 1 }}
+            </button>
+            <button
+              @click="goToPage(currentPage + 1)"
+              :disabled="currentPage >= totalPages - 1"
+              class="px-3 py-1 rounded border enabled:hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed">
+              Siguiente →
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import api from '../api/axios'
 
-const products = ref([])
-const loading  = ref(true)
-const error    = ref('')
+const products     = ref([])
+const loading      = ref(true)
+const error        = ref('')
+const currentPage  = ref(0)
+const totalPages   = ref(0)
+const totalElements = ref(0)
+const PAGE_SIZE    = 10
 
-async function fetchProducts() {
+async function fetchProducts(page = 0) {
   loading.value = true
   try {
-    const { data } = await api.get('/products')
-    products.value = data
+    const { data } = await api.get('/products', { params: { page, size: PAGE_SIZE } })
+    products.value     = data.content
+    currentPage.value  = data.number
+    totalPages.value   = data.totalPages
+    totalElements.value = data.totalElements
   } catch {
     error.value = 'Error al cargar los productos'
   } finally {
@@ -78,15 +116,30 @@ async function fetchProducts() {
   }
 }
 
+function goToPage(page) {
+  if (page < 0 || page >= totalPages.value) return
+  fetchProducts(page)
+}
+
+// Muestra máximo 5 números de página centrados en la actual
+const visiblePages = computed(() => {
+  const delta = 2
+  const start = Math.max(0, currentPage.value - delta)
+  const end   = Math.min(totalPages.value - 1, currentPage.value + delta)
+  const pages = []
+  for (let i = start; i <= end; i++) pages.push(i)
+  return pages
+})
+
 async function disableProduct(id) {
   if (!confirm('¿Deshabilitar este producto?')) return
   try {
     await api.delete(`/products/${id}`)
-    await fetchProducts()
+    await fetchProducts(currentPage.value)
   } catch (e) {
     alert(e.response?.data?.error || 'Error al deshabilitar')
   }
 }
 
-onMounted(fetchProducts)
+onMounted(() => fetchProducts(0))
 </script>
