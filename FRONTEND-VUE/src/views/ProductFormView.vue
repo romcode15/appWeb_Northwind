@@ -40,7 +40,9 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <input v-model="form.discontinued" type="checkbox" id="discontinued" class="w-4 h-4" />
+          <input :checked="form.discontinued === 1"
+            @change="form.discontinued = $event.target.checked ? 1 : 0"
+            type="checkbox" id="discontinued" class="w-4 h-4" />
           <label for="discontinued" class="text-sm text-gray-700">Descontinuado</label>
         </div>
 
@@ -82,7 +84,7 @@ const form = ref({
   supplierId: '',
   unitPrice: '',
   unitsInStock: 0,
-  discontinued: false
+  discontinued: 0
 })
 
 onMounted(async () => {

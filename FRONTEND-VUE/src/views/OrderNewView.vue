@@ -119,7 +119,7 @@ const orderError       = ref('')
 const confirming       = ref(false)
 
 const activeProducts = computed(() =>
-  products.value.filter(p => !p.discontinued)
+  products.value.filter(p => p.discontinued !== 1)
 )
 
 onMounted(async () => {

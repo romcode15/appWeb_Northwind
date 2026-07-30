@@ -38,9 +38,9 @@
               <td class="px-4 py-2">${{ p.unitPrice }}</td>
               <td class="px-4 py-2">{{ p.unitsInStock }}</td>
               <td class="px-4 py-2">
-                <span :class="p.discontinued ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'"
+                <span :class="p.discontinued === 1 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'"
                   class="px-2 py-0.5 rounded-full text-xs font-semibold">
-                  {{ p.discontinued ? 'Descontinuado' : 'Activo' }}
+                  {{ p.discontinued === 1 ? 'Descontinuado' : 'Activo' }}
                 </span>
               </td>
               <td class="px-4 py-2 flex gap-2">

@@ -3,6 +3,7 @@
     <span class="font-bold text-lg">Northwind</span>
     <div class="flex items-center gap-4 text-sm">
       <RouterLink to="/products" class="hover:underline">Productos</RouterLink>
+      <RouterLink to="/orders" class="hover:underline">Órdenes</RouterLink>
       <RouterLink to="/orders/new" class="hover:underline">Nueva Orden</RouterLink>
       <span class="text-blue-200">{{ auth.user?.fullName }}</span>
       <button @click="handleLogout" class="bg-blue-900 hover:bg-blue-800 px-3 py-1 rounded-lg">

@@ -6,6 +6,7 @@ import ProductsView from '../views/ProductsView.vue'
 import ProductFormView from '../views/ProductFormView.vue'
 import OrderNewView from '../views/OrderNewView.vue'
 import OrderDetailView from '../views/OrderDetailView.vue'
+import OrdersListView from '../views/OrdersListView.vue'
 
 const routes = [
   { path: '/',          redirect: '/login' },
@@ -13,6 +14,7 @@ const routes = [
   { path: '/products',  component: ProductsView,    meta: { requiresAuth: true } },
   { path: '/products/new',       component: ProductFormView, meta: { requiresAuth: true } },
   { path: '/products/:id/edit',  component: ProductFormView, meta: { requiresAuth: true } },
+  { path: '/orders',             component: OrdersListView,  meta: { requiresAuth: true } },
   { path: '/orders/new',         component: OrderNewView,    meta: { requiresAuth: true } },
   { path: '/orders/:id',         component: OrderDetailView, meta: { requiresAuth: true } }
 ]
